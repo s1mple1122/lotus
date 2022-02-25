@@ -96,11 +96,6 @@ func (t *TipSetExecutor) ApplyBlocks(ctx context.Context, sm *stmgr.StateManager
 
 	ctx = blockstore.WithHotView(ctx)
 	makeVmWithBaseStateAndEpoch := func(base cid.Cid, e abi.ChainEpoch) (vm.VMI, error) {
-		filVested, err := sm.GetFilVested(ctx, e)
-		if err != nil {
-			return nil, err
-		}
-
 		vmopt := &vm.VMOpts{
 			StateBase:      base,
 			Epoch:          e,
@@ -109,7 +104,6 @@ func (t *TipSetExecutor) ApplyBlocks(ctx context.Context, sm *stmgr.StateManager
 			Actors:         NewActorRegistry(),
 			Syscalls:       sm.Syscalls,
 			CircSupplyCalc: sm.GetVMCirculatingSupply,
-			FilVested:      filVested,
 			NetworkVersion: sm.GetNetworkVersion(ctx, e),
 			BaseFee:        baseFee,
 			LookbackState:  stmgr.LookbackStateGetterForTipset(sm, ts),

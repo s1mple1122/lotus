@@ -215,9 +215,19 @@ type FVM struct {
 }
 
 func NewFVM(ctx context.Context, opts *VMOpts) (*FVM, error) {
+	state, err := state.LoadStateTree(cbor.NewCborStore(opts.Bstore), opts.StateBase)
+	if err != nil {
+		return nil, err
+	}
+
+	baseCirc, err := opts.CircSupplyCalc(ctx, opts.Epoch, state)
+	if err != nil {
+		return nil, err
+	}
+
 	fvm, err := ffi.CreateFVM(0,
 		&FvmExtern{Rand: opts.Rand, Blockstore: opts.Bstore, lbState: opts.LookbackState, base: opts.StateBase, epoch: opts.Epoch},
-		opts.Epoch, opts.BaseFee, opts.FilVested, opts.NetworkVersion, opts.StateBase,
+		opts.Epoch, opts.BaseFee, baseCirc, opts.NetworkVersion, opts.StateBase,
 	)
 	if err != nil {
 		return nil, err

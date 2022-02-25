@@ -787,7 +787,7 @@ var chainPledgeCmd = &cli.Command{
 			return xerrors.Errorf("loading reward actor state: %w", err)
 		}
 
-		fmt.Println("FilVested", types.FIL(circ.FilVested))
+		fmt.Println("BaseCircSupply", types.FIL(circ.FilVested))
 		fmt.Println("FilMined", types.FIL(circ.FilMined))
 		fmt.Println("FilBurnt", types.FIL(circ.FilBurnt))
 		fmt.Println("FilLocked", types.FIL(circ.FilLocked))
